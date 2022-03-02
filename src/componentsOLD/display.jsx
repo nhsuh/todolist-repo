@@ -66,7 +66,7 @@ class Display extends Component{
         }
         return (
         <div>              
-            <h1 style = {displayStyle}>Nathan's ToDo List</h1> 
+            <h1>Nathan's ToDo List</h1> 
             <Box 
             color = "black" bgcolor = "#ffdbe7" style = {boxStyle} 
             onMouseEnter = {hoverHandler}
