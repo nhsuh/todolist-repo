@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Box from '@material-ui/core/box';
 import Todo from './todo';
+import TodoList from './todoList'
 
 class Display extends Component{
     state = {

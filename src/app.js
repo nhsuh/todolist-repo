@@ -1,10 +1,28 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Box from '@material-ui/core/box';
+import TodoList from './todoList'
+
+const LOCAL_STORAGE_KEY = 'todoApp.tasks'
 
 export default function App() {
     const [addingTask, setAddingTask] = useState(false);
     const [userInput, setUserInput] = useState("");
     const [tasks, setTasks] = useState([]);
+    useEffect(() => {
+        const storedTasks = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))
+        if(storedTasks) setTasks(storedTasks)
+    }, [])
+    useEffect (() => {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(tasks))
+    }, [tasks])
+
+    function toggleTodo(id) {
+        const newTasks = [...tasks]
+        const task = newTasks.find(task => task.key === id)
+        task.complete = !task.complete
+        setTasks(newTasks)
+    }
+    
     const displayStyle = {
         padding: "20px",
         textAlign: "center",
@@ -45,7 +63,8 @@ export default function App() {
     }
     const addTask = (userInput) => {
         let copy = [...tasks];
-        copy = [...copy, { id: tasks.length + 1, task: userInput, complete: false }];
+        if(userInput === '') return null
+        copy = [...copy, { key: tasks.length + 1, task: userInput, complete: false }];
         setTasks(copy);
       }
     const handleSubmit = (e) => {
@@ -56,6 +75,10 @@ export default function App() {
     }
     const clearAll = () =>{
         setTasks([])
+    }
+    const clearCompleted = () => {
+        const newTodos = tasks.filter(task => !task.complete)
+        setTasks(newTodos)
     }
   return (
     <div>
@@ -70,7 +93,7 @@ export default function App() {
         {addingTask && <div>
             Task: <input value = {userInput} type = "text" onChange = {handleChange}/>
             <br/>
-            Category: <input type = "text"></input>
+            {/*Category: <input type = "text"></input>*/}
             <br/>
             <Box 
                 color = "black" bgcolor = "#ffdbe7" style = {boxStyle}
@@ -80,9 +103,17 @@ export default function App() {
                 Add Task
             </Box>
         </div>}
-        {tasks.map((item) => {
+        <TodoList todos = {tasks} toggleTodo = {toggleTodo}/>
+        {/*{tasks.map((item) => {
        return <div><h3><input type = "checkbox"/>{item.task}</h3></div>;
-     })}
+     })}*/}
+        <Box 
+            color = "black" bgcolor = "#ffdbe7" style = {boxStyle}
+            onMouseEnter = {hoverHandler}
+            onMouseLeave = {exitHandler}
+            onClick = {clearCompleted}>
+            Clear Completed
+        </Box>
         <Box
             color = "black" bgcolor = "#ffdbe7" style = {boxStyle2}
             onMouseEnter = {hoverHandler}
