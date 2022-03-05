@@ -7,6 +7,7 @@ const LOCAL_STORAGE_KEY = 'todoApp.tasks'
 export default function App() {
     const [addingTask, setAddingTask] = useState(false);
     const [userInput, setUserInput] = useState("");
+    const [priority, setPriority] = useState();
     const [tasks, setTasks] = useState([]);
     useEffect(() => {
         const storedTasks = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))
@@ -58,20 +59,25 @@ export default function App() {
         else
             setAddingTask(false)
     }
-    const handleChange = (e) =>{
+    const handleChangeTask = (e) =>{
         setUserInput(e.currentTarget.value)
     }
-    const addTask = (userInput) => {
+    const handleChangePriority = (e) => {
+        setPriority(e.currentTarget.value)
+    }
+    const addTask = (userInput, priority) => {
         let copy = [...tasks];
         if(userInput === '') return null
-        copy = [...copy, { key: tasks.length + 1, task: userInput, complete: false }];
+        copy = [...copy, { key: tasks.length + 1, task: userInput, priority: parseInt(priority) ,complete: false }];
+        copy.sort((function(a, b){return a.priority - b.priority}) )
         setTasks(copy);
       }
     const handleSubmit = (e) => {
         e.preventDefault();
-        addTask(userInput);
+        addTask(userInput, priority);
         setUserInput("");
         setAddingTask(false)
+        setPriority("");
     }
     const clearAll = () =>{
         setTasks([])
@@ -91,9 +97,9 @@ export default function App() {
             {addingTask ? 'Cancel' : 'New Task'}
         </Box>
         {addingTask && <div>
-            Task: <input value = {userInput} type = "text" onChange = {handleChange}/>
+            Task: <input value = {userInput} type = "text" onChange = {handleChangeTask}/>
             <br/>
-            {/*Category: <input type = "text"></input>*/}
+            Category: <input value = {priority} type = "text" onChange = {handleChangePriority}></input>
             <br/>
             <Box 
                 color = "black" bgcolor = "#ffdbe7" style = {boxStyle}
