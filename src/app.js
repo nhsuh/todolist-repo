@@ -99,7 +99,7 @@ export default function App() {
         {addingTask && <div>
             Task: <input value = {userInput} type = "text" onChange = {handleChangeTask}/>
             <br/>
-            Category: <input value = {priority} type = "text" onChange = {handleChangePriority}></input>
+            Priority: <input value = {priority} type = "text" onChange = {handleChangePriority}></input>
             <br/>
             <Box 
                 color = "black" bgcolor = "#ffdbe7" style = {boxStyle}
